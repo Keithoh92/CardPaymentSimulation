@@ -1,1 +1,1 @@
-![]Screenshot_20240216_162714_SalesTestApp.jpg
+![](Screenshot_20240216_162714_SalesTestApp.jpg)
