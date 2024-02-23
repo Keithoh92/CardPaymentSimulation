@@ -27,9 +27,7 @@ import com.example.salestestapp.ui.theme.full
 import com.example.salestestapp.ui.theme.qtrSpacing
 
 @Composable
-fun TopAppBar(
-    crewMember: String,
-) {
+fun TopAppBar(onBack: () -> Unit) {
 
     var menuCrew by remember {
         mutableStateOf(false)
@@ -53,7 +51,7 @@ fun TopAppBar(
                 .fillMaxWidth()
                 .padding(spacing10)
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { onBack.invoke() }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     tint = colorResource(id = R.color.white),
@@ -105,7 +103,7 @@ fun TopAppBar(
                     onDismissRequest = { menuCrew = false }
                 ) {
                     DropdownMenuItem(onClick = { /*TODO*/ }) {
-                        Text(text = crewMember)
+                        Text(text = "")
                     }
                 }
 
@@ -135,5 +133,5 @@ object FilterType {
 @Preview(showBackground = true)
 @Composable
 fun SalesControlTopAppBarPreview() {
-    TopAppBar("")
+    TopAppBar(onBack = {})
 }

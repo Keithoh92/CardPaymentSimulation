@@ -37,8 +37,6 @@ import com.example.salestestapp.ui.theme.fontSize16
 import com.example.salestestapp.ui.theme.size12
 import com.example.salestestapp.ui.theme.spacing24
 import com.example.salestestapp.ui.theme.spacing8
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun CardPaymentScreenAlertBanner(
@@ -47,9 +45,7 @@ fun CardPaymentScreenAlertBanner(
     showBanner: Boolean,
     icon: ImageVector,
     iconTint: Color,
-    displayDuration: Duration = 5.seconds,
-    backgroundColor: Color = MaterialTheme.colors.background,
-    onDismissRequest: () -> Unit
+    backgroundColor: Color = MaterialTheme.colors.background
 ) {
 
     AnimatedVisibility(
@@ -88,7 +84,8 @@ fun CardPaymentScreenAlertBanner(
                     Text(
                         text = bannerText,
                         color = Color.Black,
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.subtitle1
                     )
 
                     AnimatedVisibility(
@@ -101,7 +98,8 @@ fun CardPaymentScreenAlertBanner(
                                 text = bannerSubText,
                                 color = Color.Black,
                                 textAlign = TextAlign.Start,
-                                fontSize = fontSize16
+                                fontSize = fontSize16,
+                                style = MaterialTheme.typography.subtitle2
                             )
                         }
                     }
@@ -125,8 +123,7 @@ private fun CardPaymentScreenAlertBannerPreview(
                 showBanner = true,
                 icon = params.icon,
                 iconTint = params.iconTint,
-                backgroundColor = params.backgroundColor,
-                onDismissRequest = {}
+                backgroundColor = params.backgroundColor
             )
         }
     }

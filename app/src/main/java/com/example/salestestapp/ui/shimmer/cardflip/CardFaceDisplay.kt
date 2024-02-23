@@ -56,20 +56,19 @@ import com.example.salestestapp.ui.shimmer.event.CardPaymentScreenEvent
 import com.example.salestestapp.ui.shimmer.model.PaymentBreakdown
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlin.time.Duration.Companion.seconds
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun CardFaceDisplay(
     cardPaymentUIState: StateFlow<CardPaymentScreenUIState>,
-    event: (BaseComposeEvent) -> Unit,
+    event: (BaseComposeEvent) -> Unit
 ) {
 
     val uiState = cardPaymentUIState.collectAsState()
 
     SalesTestAppTheme {
         Scaffold(
-            topBar = { TopAppBar(crewMember = "John") },
+            topBar = { TopAppBar(onBack = { event(CardPaymentScreenEvent.OnBack) }) },
             bottomBar = { CardPaymentBottomButtons(event) },
             content = {
                 Column(
@@ -100,9 +99,7 @@ fun CardFaceDisplay(
                                     showBanner = uiState.value.cardPaymentAlertBannerConfig.showAlertBanner,
                                     icon = uiState.value.cardPaymentAlertBannerConfig.alertBannerIcon,
                                     iconTint = uiState.value.cardPaymentAlertBannerConfig.alertBannerIconTint,
-                                    backgroundColor = uiState.value.cardPaymentAlertBannerConfig.alertBannerBackgroundColor,
-                                    displayDuration = 5.seconds,
-                                    onDismissRequest = { event(CardPaymentScreenEvent.OnDismissAlertBanner) }
+                                    backgroundColor = uiState.value.cardPaymentAlertBannerConfig.alertBannerBackgroundColor
                                 )
                             }
                         }
