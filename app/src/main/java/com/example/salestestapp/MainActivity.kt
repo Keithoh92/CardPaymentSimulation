@@ -14,6 +14,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.salestestapp.ui.home.navigation.homeScreen
 import com.example.salestestapp.ui.home.navigation.homeScreenRoute
+import com.example.salestestapp.ui.salescontrol.navigation.navigateToSalesControl
+import com.example.salestestapp.ui.salescontrol.navigation.salesControlScreen
 import com.example.salestestapp.ui.shimmer.navigation.cardPaymentScreen
 import com.example.salestestapp.ui.shimmer.navigation.navigateToCardPaymentScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,9 +35,10 @@ class MainActivity : ComponentActivity() {
             navController = rememberNavController()
             NavHost(navController = navController, startDestination = homeScreenRoute) {
                 homeScreen(
-                    onClick = { isSignature ->
+                    onCard = { isSignature ->
                         navController.navigateToCardPaymentScreen(isSignature)
                     },
+                    onSalesControl = { navController.navigateToSalesControl() },
                     onBack = { navController.popBackStack() }
                 )
                 cardPaymentScreen(
@@ -48,6 +51,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 )
+                salesControlScreen(onBack = { navController.popBackStack() })
             }
         }
     }

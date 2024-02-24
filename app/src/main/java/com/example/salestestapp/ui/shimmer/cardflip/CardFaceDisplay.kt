@@ -2,6 +2,7 @@ package com.example.salestestapp.ui.shimmer.cardflip
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -39,7 +40,9 @@ import com.example.salestestapp.R
 import com.example.salestestapp.ui.compose.TopAppBar
 import com.example.salestestapp.ui.shimmer.CardPaymentBreakdown
 import com.example.salestestapp.ui.shimmer.CardPaymentCardBackFrame
+import com.example.salestestapp.ui.shimmer.event.CardPaymentScreenEvent
 import com.example.salestestapp.ui.shimmer.model.CardDetails
+import com.example.salestestapp.ui.shimmer.model.PaymentBreakdown
 import com.example.salestestapp.ui.shimmer.state.CardPaymentScreenUIState
 import com.example.salestestapp.ui.theme.SalesTestAppTheme
 import com.example.salestestapp.ui.theme.fontSize12
@@ -52,8 +55,6 @@ import com.example.salestestapp.ui.theme.spacing24
 import com.example.salestestapp.ui.theme.spacing32
 import com.example.salestestapp.ui.theme.spacing8
 import com.example.testui.common.BaseComposeEvent
-import com.example.salestestapp.ui.shimmer.event.CardPaymentScreenEvent
-import com.example.salestestapp.ui.shimmer.model.PaymentBreakdown
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -255,6 +256,7 @@ fun CardFaceDisplay(
             }
         )
     }
+    BackHandler(onBack = { event(CardPaymentScreenEvent.OnBack) })
 }
 
 @SuppressLint("UnrememberedMutableState")

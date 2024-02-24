@@ -9,14 +9,18 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun HomeScreenMain(
     viewModel: HomeScreenViewModel,
-    onClick: (isSignature: Boolean) -> Unit,
+    onCard: (isSignature: Boolean) -> Unit,
+    onSalesControl: () -> Unit,
     onBack: () -> Unit
 ) {
     LaunchedEffect(key1 = Unit, block = {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is HomeScreenEffect.Navigation.CardPaymentScreen ->
-                    onClick.invoke(effect.isSignatureRequired)
+                    onCard.invoke(effect.isSignatureRequired)
+                is HomeScreenEffect.Navigation.SalesControlScreen -> {
+                    onSalesControl.invoke()
+                }
                 is HomeScreenEffect.Navigation.Back -> onBack.invoke()
             }
         }
