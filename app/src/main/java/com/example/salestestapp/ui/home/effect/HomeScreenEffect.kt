@@ -4,6 +4,7 @@ sealed class HomeScreenEffect {
 
     sealed class Navigation: HomeScreenEffect() {
         data class CardPaymentScreen(val isSignatureRequired: Boolean) : Navigation()
+        object SalesControlScreen : Navigation()
         object Back : Navigation()
     }
 }

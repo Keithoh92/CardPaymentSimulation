@@ -20,13 +20,15 @@ class HomeScreenViewModel@Inject constructor(): ViewModel() {
     fun onEvent(event: HomeScreenEvent) {
         when (event) {
             is HomeScreenEvent.OnCardPaymentSimulationClicked ->
-                navigateToCardPaymentScreen(false)
+                navigateTo(HomeScreenEffect.Navigation.CardPaymentScreen(false))
             is HomeScreenEvent.OnCardPaymentSignatureSimulationClicked ->
-                navigateToCardPaymentScreen(true)
+                navigateTo(HomeScreenEffect.Navigation.CardPaymentScreen(true))
+            is HomeScreenEvent.OnSalesControlClicked ->
+                navigateTo(HomeScreenEffect.Navigation.SalesControlScreen)
         }
     }
 
-    private fun navigateToCardPaymentScreen(isSignature: Boolean) = viewModelScope.launch {
-        _effect.send(HomeScreenEffect.Navigation.CardPaymentScreen(isSignature))
+    private fun navigateTo(destination: HomeScreenEffect.Navigation) = viewModelScope.launch {
+        _effect.send(destination)
     }
 }

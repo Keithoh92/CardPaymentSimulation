@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SalesTestApp</string>
+    <string name="salescontrol_lblTime">Time</string>
+    <string name="salescontrol_lblSeatNumber">Seat Number</string>
 </resources>

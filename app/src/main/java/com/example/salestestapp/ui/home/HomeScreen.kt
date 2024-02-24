@@ -60,6 +60,27 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
                 textAlign = TextAlign.Center
             )
         }
+
+        Text(
+            modifier = Modifier.padding(top = spacing32, bottom = spacing32),
+            text = "Sales Control Prototype",
+            style = MaterialTheme.typography.h6.copy(
+                fontFamily = FontFamily.Monospace,
+                fontWeight = FontWeight.Bold
+            ),
+            textAlign = TextAlign.Center
+        )
+
+        OutlinedButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { onEvent(HomeScreenEvent.OnSalesControlClicked) }
+        ) {
+            Text(
+                text = "Sales Control",
+                style = MaterialTheme.typography.h6,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
