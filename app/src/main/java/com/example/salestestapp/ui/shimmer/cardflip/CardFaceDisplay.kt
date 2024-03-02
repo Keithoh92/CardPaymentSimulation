@@ -1,13 +1,13 @@
 package com.example.salestestapp.ui.shimmer.cardflip
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,25 +18,26 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Draw
 import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.compose.AppTheme
 import com.example.salestestapp.R
+import com.example.salestestapp.common.ThemePreview
 import com.example.salestestapp.ui.compose.TopAppBar
 import com.example.salestestapp.ui.shimmer.CardPaymentBreakdown
 import com.example.salestestapp.ui.shimmer.CardPaymentCardBackFrame
@@ -44,7 +45,6 @@ import com.example.salestestapp.ui.shimmer.event.CardPaymentScreenEvent
 import com.example.salestestapp.ui.shimmer.model.CardDetails
 import com.example.salestestapp.ui.shimmer.model.PaymentBreakdown
 import com.example.salestestapp.ui.shimmer.state.CardPaymentScreenUIState
-import com.example.salestestapp.ui.theme.SalesTestAppTheme
 import com.example.salestestapp.ui.theme.fontSize12
 import com.example.salestestapp.ui.theme.full
 import com.example.salestestapp.ui.theme.pointFive
@@ -62,14 +62,18 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun CardFaceDisplay(
     cardPaymentUIState: StateFlow<CardPaymentScreenUIState>,
-    event: (BaseComposeEvent) -> Unit
+    event: (BaseComposeEvent) -> Unit,
 ) {
-
     val uiState = cardPaymentUIState.collectAsState()
 
-    SalesTestAppTheme {
+    AppTheme {
         Scaffold(
-            topBar = { TopAppBar(onBack = { event(CardPaymentScreenEvent.OnBack) }) },
+            topBar = {
+                TopAppBar(
+                    title = "Card Payment",
+                    onBack = { event(CardPaymentScreenEvent.OnBack) }
+                )
+            },
             bottomBar = { CardPaymentBottomButtons(event) },
             content = {
                 Column(
@@ -77,17 +81,12 @@ fun CardFaceDisplay(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(
+                            top = it.calculateTopPadding(),
                             bottom = it.calculateBottomPadding()
                         )
                         .background(Color.Transparent)
                 ) {
-                    Column(
-                        modifier = Modifier.padding(
-                            start = spacing12,
-                            end = spacing12
-                        )
-                    ) {
-
+                    Column(modifier = Modifier.padding(start = spacing12, end = spacing12)) {
                         AnimatedVisibility(
                             visible = uiState.value.showAlertBanner,
                             enter = fadeIn(animationSpec = tween(1000)),
@@ -113,15 +112,10 @@ fun CardFaceDisplay(
                                     .padding(spacing12)
                                     .height(50.dp)
                             ) {
-                                Text(
-                                    text = "Chip & Pin - Card requires signature",
-                                )
+                                Text(text = "Chip & Pin - Card requires signature")
                                 Row {
                                     AnimatedVisibility(visible = uiState.value.cardSignatureIsShowing) {
-                                        Text(
-                                            text = "Please sign below",
-                                            textAlign = TextAlign.Start
-                                        )
+                                        Text(text = "Please sign below", textAlign = TextAlign.Start)
                                     }
                                 }
                             }
@@ -135,9 +129,7 @@ fun CardFaceDisplay(
                                 CardPaymentCardFrameSuccess(cardDetails = uiState.value.cardDetails)
                             },
 
-                            loading = {
-                                CardPaymentCardFrameReading(cardDetails = uiState.value.cardDetails)
-                            },
+                            loading = { CardPaymentCardFrameReading() },
 
                             signature = {
                                 CardPaymentCardBackFrame(
@@ -149,7 +141,7 @@ fun CardFaceDisplay(
 
                         AnimatedVisibility(
                             visible = uiState.value.cardDetails.isChipAndSignature,
-                            enter = fadeIn(tween(1000))
+                            enter = fadeIn(tween(2000)),
                         ) {
                             Row(
                                 horizontalArrangement = Arrangement.Start,
@@ -159,12 +151,24 @@ fun CardFaceDisplay(
                             ) {
                                 OutlinedButton(
                                     onClick = { event(CardPaymentScreenEvent.OnClickChangeView) },
-                                    colors = ButtonDefaults.outlinedButtonColors(
-                                        contentColor = MaterialTheme.colors.primary,
-                                        backgroundColor = MaterialTheme.colors.surface
-                                    ),
-                                    modifier = Modifier.weight(if (uiState.value.cardSignatureIsShowing) pointFive else full)
-
+                                    colors = if (!isSystemInDarkTheme()) {
+                                        ButtonDefaults.outlinedButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.primary,
+                                            contentColor = MaterialTheme.colorScheme.surface
+                                        )
+                                    } else {
+                                        ButtonDefaults.outlinedButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.secondary,
+                                            contentColor = MaterialTheme.colorScheme.onPrimary
+                                        )
+                                    },
+                                    modifier = Modifier.weight(
+                                        if (uiState.value.cardSignatureIsShowing) {
+                                            pointFive
+                                        } else {
+                                            full
+                                        }
+                                    )
                                 ) {
                                     Icon(
                                         imageVector = Icons.Outlined.Refresh,
@@ -173,29 +177,37 @@ fun CardFaceDisplay(
                                     )
                                     Spacer(modifier = Modifier.width(spacing8))
                                     Text(
-                                        text = if (uiState.value.cardSignatureIsShowing) "Show Card Details" else "Show Card Signature",
+                                        text = if (uiState.value.cardSignatureIsShowing) {
+                                            "Show Card Details"
+                                        } else {
+                                            "Show Card Signature"
+                                        },
                                         fontSize = fontSize12,
                                         maxLines = 1
                                     )
                                 }
-
                                 Spacer(modifier = Modifier.width(spacing8))
-
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .weight(pointFive)
                                 ) {
-                                    AnimatedVisibility(
-                                        visible = uiState.value.cardSignatureIsShowing,
-                                        exit = fadeOut(animationSpec = tween(100)),
-                                    ) {
+                                    if (uiState.value.cardSignatureIsShowing) {
                                         OutlinedButton(
-                                            onClick = { event(CardPaymentScreenEvent.OnClearSignatureClicked) },
-                                            colors = ButtonDefaults.outlinedButtonColors(
-                                                contentColor = MaterialTheme.colors.primary,
-                                                backgroundColor = MaterialTheme.colors.surface
-                                            ),
+                                            onClick = {
+                                                event(CardPaymentScreenEvent.OnClearSignatureClicked)
+                                            },
+                                            colors = if (!isSystemInDarkTheme()) {
+                                                ButtonDefaults.outlinedButtonColors(
+                                                    containerColor = MaterialTheme.colorScheme.primary,
+                                                    contentColor = MaterialTheme.colorScheme.surface
+                                                )
+                                            } else {
+                                                ButtonDefaults.outlinedButtonColors(
+                                                    containerColor = MaterialTheme.colorScheme.secondary,
+                                                    contentColor = MaterialTheme.colorScheme.onPrimary
+                                                )
+                                            },
                                             modifier = Modifier.fillMaxWidth()
                                         ) {
                                             Icon(
@@ -215,7 +227,6 @@ fun CardFaceDisplay(
                                 }
                             }
                         }
-
                         Spacer(
                             modifier = Modifier.height(
                                 if (uiState.value.cardDetails.isChipAndSignature) {
@@ -225,25 +236,23 @@ fun CardFaceDisplay(
                                 }
                             )
                         )
-
                         Column(verticalArrangement = Arrangement.spacedBy(spacing16)) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Divider(
-                                    thickness = 2.dp,
+                                HorizontalDivider(
                                     modifier = Modifier
                                         .height(2.dp)
-                                        .width(spacing16)
+                                        .width(spacing16),
+                                    thickness = 2.dp
                                 )
                                 Text(
                                     text = "Payment Breakdown",
                                     modifier = Modifier.padding(horizontal = spacing8)
                                 )
-                                Divider(
-                                    thickness = 2.dp,
-                                    modifier = Modifier.weight(pointFive)
+                                HorizontalDivider(
+                                    modifier = Modifier.weight(pointFive),
+                                    thickness = 2.dp
                                 )
                             }
-
                             event(
                                 CardPaymentScreenEvent.OnSelectedChipChanged(
                                     uiState.value.selectedChipIndex
@@ -260,8 +269,7 @@ fun CardFaceDisplay(
 }
 
 @SuppressLint("UnrememberedMutableState")
-@Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@ThemePreview
 @Composable
 private fun CardFaceDisplayPreview() {
     val cardPaymentScreenUIState = MutableStateFlow(
@@ -286,10 +294,11 @@ private fun CardFaceDisplayPreview() {
             paymentBreakdownIsShowing = true,
             selectedChipIndex = 0,
             cardSignatureIsShowing = false,
+            showAlertBanner = true
         )
     )
 
-    SalesTestAppTheme {
+    AppTheme {
         CardFaceDisplay(
             cardPaymentUIState = cardPaymentScreenUIState,
             event = {}

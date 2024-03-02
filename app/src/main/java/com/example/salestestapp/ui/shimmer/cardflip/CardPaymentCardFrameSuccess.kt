@@ -1,8 +1,8 @@
 package com.example.salestestapp.ui.shimmer.cardflip
 
-import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,30 +26,37 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.compose.AppTheme
 import com.example.salestestapp.R
+import com.example.salestestapp.common.ThemePreview
 import com.example.salestestapp.ui.shimmer.model.CardDetails
-import com.example.salestestapp.ui.theme.SalesTestAppTheme
 import com.example.salestestapp.ui.theme.fontSize12
 import com.example.salestestapp.ui.theme.fontSize16
 import com.example.salestestapp.ui.theme.fontSize18
 import com.example.salestestapp.ui.theme.full
-import com.example.salestestapp.ui.theme.size100
+import com.example.salestestapp.ui.theme.size80
 import com.example.salestestapp.ui.theme.spacing12
 import com.example.salestestapp.ui.theme.spacing16
 import com.example.salestestapp.ui.theme.spacing24
-import com.example.salestestapp.ui.theme.spacing8
 
 @Composable
 fun CardPaymentCardFrameSuccess(cardDetails: CardDetails) {
     val boxSize = with(LocalDensity.current) { 230.dp.toPx() }
 
-    val gradientColorsCardDetails = listOf(
-        Color.LightGray.copy(alpha = 0.9f),
-        Color.LightGray.copy(alpha = 0.2f),
-        Color.LightGray.copy(alpha = 0.9f)
-    )
+    val gradientColorsCardDetails = if (!isSystemInDarkTheme()) {
+        listOf(
+            Color.LightGray.copy(alpha = 0.9f),
+            Color.LightGray.copy(alpha = 0.2f),
+            Color.LightGray.copy(alpha = 0.9f)
+        )
+    } else {
+        listOf(
+            Color.LightGray.copy(alpha = 0.5f),
+            Color.LightGray.copy(alpha = 0.9f),
+            Color.LightGray.copy(alpha = 0.5f)
+        )
+    }
 
     val brushStill = Brush.linearGradient(
         colors = gradientColorsCardDetails,
@@ -56,12 +65,17 @@ fun CardPaymentCardFrameSuccess(cardDetails: CardDetails) {
     )
 
     Card(
-        backgroundColor = Color.Transparent,
+        colors = CardColors(
+            containerColor = Color.Transparent,
+            contentColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            disabledContentColor = Color.Transparent
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .background(brush = brushStill)
             .height(230.dp),
-        elevation = 0.dp
+        elevation = CardDefaults.cardElevation()
     ) {
         Column(
             verticalArrangement = Arrangement.SpaceEvenly,
@@ -73,7 +87,7 @@ fun CardPaymentCardFrameSuccess(cardDetails: CardDetails) {
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = spacing16)
+                    .padding(start = spacing16, top = spacing24)
             ) {
 
                 Row(
@@ -89,7 +103,8 @@ fun CardPaymentCardFrameSuccess(cardDetails: CardDetails) {
                         fontSize = fontSize12,
                         fontStyle = FontStyle.Italic,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black
                     )
 
                     Spacer(modifier = Modifier.weight(full))
@@ -97,22 +112,24 @@ fun CardPaymentCardFrameSuccess(cardDetails: CardDetails) {
                     Image(
                         painter = painterResource(id = cardDetails.cardTypeSymbolResource),
                         contentDescription = null,
-                        modifier = Modifier.size(size100),
+                        modifier = Modifier.size(size80),
                     )
                 }
             }
             // Card Number
             Row(
                 horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = spacing8)
+                    .padding(vertical = spacing16)
             ) {
                 Text(
                     text = cardDetails.getCardNumberFormatted(),
                     fontWeight = FontWeight.Light,
                     fontFamily = FontFamily.Monospace,
-                    fontSize = fontSize18
+                    fontSize = fontSize18,
+                    color = Color.Black
                 )
             }
 
@@ -129,12 +146,14 @@ fun CardPaymentCardFrameSuccess(cardDetails: CardDetails) {
                     Text(
                         text = "CARD HOLDER",
                         fontSize = fontSize12,
-                        fontFamily = FontFamily.SansSerif
+                        fontFamily = FontFamily.SansSerif,
+                        color = Color.Black
                     )
                     Text(
                         text = cardDetails.cardHolder.uppercase(),
                         fontSize = fontSize16,
-                        fontFamily = FontFamily.Default
+                        fontFamily = FontFamily.Default,
+                        color = Color.Black
                     )
                 }
                 Spacer(modifier = Modifier.weight(full))
@@ -143,13 +162,15 @@ fun CardPaymentCardFrameSuccess(cardDetails: CardDetails) {
                     Text(
                         text = "EXPIRY DATE",
                         fontSize = fontSize12,
-                        fontFamily = FontFamily.SansSerif
+                        fontFamily = FontFamily.SansSerif,
+                        color = Color.Black
                     )
 
                     Text(
                         text = cardDetails.expiryDate,
                         fontSize = fontSize16,
-                        fontFamily = FontFamily.Default
+                        fontFamily = FontFamily.Default,
+                        color = Color.Black
                     )
                 }
             }
@@ -157,8 +178,7 @@ fun CardPaymentCardFrameSuccess(cardDetails: CardDetails) {
     }
 }
 
-@Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@ThemePreview
 @Composable
 fun CardPaymentCardFrameSuccessPreview() {
     val cardDetails = CardDetails(
@@ -168,7 +188,5 @@ fun CardPaymentCardFrameSuccessPreview() {
         cardTypeSymbolResource = R.drawable.diners_logo,
         expiryDate = "08/25"
     )
-    SalesTestAppTheme() {
-        CardPaymentCardFrameSuccess(cardDetails)
-    }
+    AppTheme { CardPaymentCardFrameSuccess(cardDetails) }
 }

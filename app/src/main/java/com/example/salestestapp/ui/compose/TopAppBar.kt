@@ -1,137 +1,77 @@
 package com.example.salestestapp.ui.compose
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.salestestapp.ui.theme.spacing10
+import com.example.compose.AppTheme
 import com.example.salestestapp.R
-import com.example.salestestapp.ui.theme.double
-import com.example.salestestapp.ui.theme.full
+import com.example.salestestapp.common.ThemePreview
 import com.example.salestestapp.ui.theme.qtrSpacing
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBar(onBack: () -> Unit) {
-
-    var menuCrew by remember {
-        mutableStateOf(false)
-    }
-
-    var menuSalesFilter by remember {
-        mutableStateOf(false)
-    }
-
-    var title by remember {
-        mutableStateOf("(All)")
-    }
-
+fun TopAppBar(title: String, onBack: () -> Unit) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     TopAppBar(
-        backgroundColor = colorResource(id = R.color.black)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(spacing10)
-        ) {
-            IconButton(onClick = { onBack.invoke() }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    tint = colorResource(id = R.color.white),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(16.dp)
-                        .align(Alignment.CenterVertically)
-                )
-            }
+        title = {
             Text(
-                text = "Card Payment",
+                text = title,
                 fontSize = 16.sp,
                 color = colorResource(id = R.color.white),
-                modifier = Modifier
-                    .weight(double)
-                    .padding(start = qtrSpacing),
+                modifier = Modifier.padding(start = qtrSpacing),
             )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier.weight(full)
-            ) {
-                IconButton(
-                    onClick = { menuCrew = !menuCrew } ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_bell),
-                        contentDescription = "crew",
-                        tint = colorResource(id = R.color.white),
-                        modifier = Modifier
-                            .size(20.dp)
-                            .align(Alignment.CenterVertically)
-                    )
-                }
-
-                IconButton(
-                    onClick = { menuSalesFilter = !menuSalesFilter } ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_dotmenu),
-                        contentDescription = "sales filter",
-                        tint = colorResource(id = R.color.white),
-                        modifier = Modifier
-                            .size(20.dp)
-                            .align(Alignment.CenterVertically)
-                    )
-                }
-
-                DropdownMenu(
-                    expanded = menuCrew,
-                    onDismissRequest = { menuCrew = false }
-                ) {
-                    DropdownMenuItem(onClick = { /*TODO*/ }) {
-                        Text(text = "")
-                    }
-                }
-
-                DropdownMenu(
-                    expanded = menuSalesFilter,
-                    onDismissRequest = { menuSalesFilter = false }
-                ) {
-                    val saleTypeList = listOf(
-                        FilterType.FILTER_BY_SALE
-                    )
-
-                    saleTypeList.forEach {
-                        DropdownMenuItem(onClick = { title = "(${it})" }) {
-                            Text(text = it)
-                        }
-                    }
-                }
+        },
+        colors = if (!isSystemInDarkTheme()) {
+            TopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                scrolledContainerColor = MaterialTheme.colorScheme.surface,
+                navigationIconContentColor = Color.White,
+                actionIconContentColor = Color.Black,
+                titleContentColor = Color.White
+            )
+        } else {
+            TopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                scrolledContainerColor = MaterialTheme.colorScheme.surface,
+                navigationIconContentColor = Color.White,
+                actionIconContentColor = Color.Black,
+                titleContentColor = MaterialTheme.colorScheme.secondary
+            )
+        },
+        scrollBehavior = scrollBehavior,
+        navigationIcon = {
+            IconButton(onClick = { onBack.invoke() }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    tint = colorResource(id = R.color.white),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
             }
         }
-    }
+    )
 }
 
-object FilterType {
-    const val FILTER_BY_SALE = "Sales"
-}
-
-@Preview(showBackground = true)
+@ThemePreview
 @Composable
 fun SalesControlTopAppBarPreview() {
-    TopAppBar(onBack = {})
+    AppTheme {
+        TopAppBar(title = "Card Payment", onBack = {})
+    }
 }

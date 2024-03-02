@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.salestestapp.ui.theme.SalesTestAppTheme
+import com.example.compose.AppTheme
 import com.example.salestestapp.ui.shimmer.event.CardPaymentScreenEvent
 import com.example.salestestapp.ui.theme.spacing8
 
@@ -39,7 +39,7 @@ fun CardPaymentChipGroup(
 @Preview
 @Composable
 fun ChipGroupPreview() {
-    SalesTestAppTheme {
+    AppTheme {
         CardPaymentChipGroup(buttonTitles =
         listOf("Payment Breakdown", "Card Signature"),
             event = {}

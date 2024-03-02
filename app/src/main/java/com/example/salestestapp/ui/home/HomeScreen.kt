@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,8 +16,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.compose.AppTheme
 import com.example.salestestapp.ui.home.event.HomeScreenEvent
-import com.example.salestestapp.ui.theme.SalesTestAppTheme
 import com.example.salestestapp.ui.theme.spacing32
 import com.example.salestestapp.ui.theme.spacing8
 
@@ -33,7 +33,7 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
         Text(
             modifier = Modifier.padding(bottom = spacing32),
             text = "Credit Card Flip Prototype",
-            style = MaterialTheme.typography.h6.copy(
+            style = MaterialTheme.typography.titleSmall.copy(
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold
             ),
@@ -45,7 +45,7 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
         ) {
             Text(
                 text = "Payment Simulation",
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.titleSmall,
                 textAlign = TextAlign.Center
             )
         }
@@ -56,7 +56,7 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
         ) {
             Text(
                 text = "Payment Signature Simulation",
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.titleSmall,
                 textAlign = TextAlign.Center
             )
         }
@@ -64,7 +64,7 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
         Text(
             modifier = Modifier.padding(top = spacing32, bottom = spacing32),
             text = "Sales Control Prototype",
-            style = MaterialTheme.typography.h6.copy(
+            style = MaterialTheme.typography.titleSmall.copy(
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold
             ),
@@ -77,7 +77,7 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
         ) {
             Text(
                 text = "Sales Control",
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.titleSmall,
                 textAlign = TextAlign.Center
             )
         }
@@ -87,7 +87,7 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    SalesTestAppTheme {
+    AppTheme {
         Surface {
             HomeScreen(onEvent = {})
         }

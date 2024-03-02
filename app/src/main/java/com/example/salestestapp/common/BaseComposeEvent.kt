@@ -1,4 +1,3 @@
 package com.example.testui.common
 
-interface BaseComposeEvent {
-}
+interface BaseComposeEvent {}
