@@ -1,6 +1,5 @@
 package com.example.salestestapp.ui.shimmer.cardflip
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
@@ -11,29 +10,29 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import com.example.compose.AppTheme
+import com.example.salestestapp.common.ThemePreview
 import com.example.salestestapp.ui.theme.DarkGreen
 import com.example.salestestapp.ui.theme.DarkRed
 import com.example.salestestapp.ui.theme.LightGreen
 import com.example.salestestapp.ui.theme.LightRed
-import com.example.salestestapp.ui.theme.SalesTestAppTheme
-import com.example.salestestapp.ui.theme.fontSize16
 import com.example.salestestapp.ui.theme.size12
 import com.example.salestestapp.ui.theme.spacing24
 import com.example.salestestapp.ui.theme.spacing8
@@ -45,7 +44,7 @@ fun CardPaymentScreenAlertBanner(
     showBanner: Boolean,
     icon: ImageVector,
     iconTint: Color,
-    backgroundColor: Color = MaterialTheme.colors.background
+    backgroundColor: Color = MaterialTheme.colorScheme.background
 ) {
 
     AnimatedVisibility(
@@ -64,7 +63,12 @@ fun CardPaymentScreenAlertBanner(
                 .padding(spacing24)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(size12),
-            backgroundColor = backgroundColor
+            colors = CardColors(
+                containerColor = backgroundColor,
+                contentColor = backgroundColor,
+                disabledContainerColor = backgroundColor,
+                disabledContentColor = backgroundColor
+            ),
         ) {
             Row(
                 modifier = Modifier
@@ -85,7 +89,7 @@ fun CardPaymentScreenAlertBanner(
                         text = bannerText,
                         color = Color.Black,
                         textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.subtitle1
+                        style = MaterialTheme.typography.bodyLarge
                     )
 
                     AnimatedVisibility(
@@ -98,8 +102,7 @@ fun CardPaymentScreenAlertBanner(
                                 text = bannerSubText,
                                 color = Color.Black,
                                 textAlign = TextAlign.Start,
-                                fontSize = fontSize16,
-                                style = MaterialTheme.typography.subtitle2
+                                style = MaterialTheme.typography.bodyMedium
                             )
                         }
                     }
@@ -109,13 +112,12 @@ fun CardPaymentScreenAlertBanner(
     }
 }
 
-@Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@ThemePreview
 @Composable
 private fun CardPaymentScreenAlertBannerPreview(
     @PreviewParameter(CardPaymentScreenAlertBannerPreviewProvider::class) params: CardPaymentScreenAlertBannerPreviewData
 ) {
-    SalesTestAppTheme {
+    AppTheme {
         Surface {
             CardPaymentScreenAlertBanner(
                 bannerText = params.bannerText,

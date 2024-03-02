@@ -1,6 +1,5 @@
 package com.example.salestestapp.ui.shimmer
 
-import android.content.res.Configuration
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -18,9 +17,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,8 +31,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.salestestapp.common.ThemePreview
 import com.example.salestestapp.ui.compose.ProgressIndicator
 import com.example.salestestapp.ui.theme.SalesTestAppTheme
 import com.example.salestestapp.ui.theme.fontSize12
@@ -56,10 +57,7 @@ fun CardPaymentCardFrameLoading() {
         initialValue = 0f,
         targetValue = 1000f,
         animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = 1000,
-                easing = FastOutSlowInEasing
-            ),
+            animation = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ), label = ""
     )
@@ -71,13 +69,18 @@ fun CardPaymentCardFrameLoading() {
     )
 
     Card(
-        backgroundColor = Color.Transparent,
+        colors = CardColors(
+            containerColor = Color.Transparent,
+            contentColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            disabledContentColor = Color.Transparent
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(spacing32))
             .background(brush = brush)
             .height(230.dp),
-        elevation = 0.dp
+        elevation = CardDefaults.cardElevation()
     ) {
         Column(
             verticalArrangement = Arrangement.SpaceEvenly,
@@ -144,7 +147,7 @@ fun CardPaymentCardFrameLoading() {
                     .padding(vertical = spacing12, horizontal = spacing24)
             ) {
                 // Card Holder name
-                Column() {
+                Column {
                     Text(
                         text = "CARD HOLDER",
                         fontSize = fontSize12,
@@ -164,7 +167,7 @@ fun CardPaymentCardFrameLoading() {
                 Spacer(modifier = Modifier.weight(full))
 
                 // Expiry Date
-                Column() {
+                Column {
                     Text(
                         text = "EXPIRY DATE",
                         fontSize = fontSize12,
@@ -184,8 +187,7 @@ fun CardPaymentCardFrameLoading() {
     }
 }
 
-@Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@ThemePreview
 @Composable
 fun CardPaymentCardFrameLoadingPreview() {
     SalesTestAppTheme {

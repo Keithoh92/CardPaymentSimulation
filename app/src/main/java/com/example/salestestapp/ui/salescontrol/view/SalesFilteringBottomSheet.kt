@@ -12,17 +12,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Divider
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.Text
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,8 +37,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.salestestapp.common.ThemePreview
+import com.example.salestestapp.ui.salescontrol.enums.SalesFilterType
 import com.example.salestestapp.ui.salescontrol.event.SalesControlScreenEvent
 import com.example.salestestapp.ui.salescontrol.model.mockSeatListState
 import com.example.salestestapp.ui.salescontrol.state.SalesFilteringBottomSheetUIState
@@ -54,10 +60,10 @@ fun SalesFilteringBottomSheet(
 ) {
     Box {
         Column(
-            modifier = Modifier
-                .border(BorderStroke(0.5.dp, Color.LightGray))
-                .padding(start = spacing16, end = spacing16, bottom = spacing16)
+            modifier = Modifier.padding(start = spacing16, end = spacing16, bottom = spacing16)
         ) {
+            HorizontalDivider(thickness = 2.dp)
+
             Row(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
@@ -76,37 +82,30 @@ fun SalesFilteringBottomSheet(
                     )
                 }
             }
-            Divider(thickness = 2.dp)
+
             Spacer(modifier = Modifier.height(height = height24))
             Text(text = "Sale Type:")
-            Row {
-                Column {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.padding(start = spacing16)
+            ) {
+                val salesFilters = SalesFilterType.values().toList()
+
+                items(salesFilters.size) { item ->
+                    val checkedValue = when (salesFilters[item]) {
+                        SalesFilterType.FILTER_BY_MISSED ->
+                            salesFilteringBottomSheetUIState.isMissedChecked
+                        SalesFilterType.FILTER_BY_COMP ->
+                            salesFilteringBottomSheetUIState.isCompChecked
+                        SalesFilterType.FILTER_BY_VALID ->
+                            salesFilteringBottomSheetUIState.isValidChecked
+                        SalesFilterType.FILTER_BY_VOID ->
+                            salesFilteringBottomSheetUIState.isVoidChecked
+                    }
+
                     SwitchAndSalesType(
-                        SalesFilterType.FILTER_BY_MISSED,
-                        salesFilteringBottomSheetUIState.isMissedChecked,
-                        onCheckChanged = { type, isChecked ->
-                            onEvent(SalesControlScreenEvent.OnSalesTypeChecked(type, isChecked))
-                        }
-                    )
-                    SwitchAndSalesType(
-                        SalesFilterType.FILTER_BY_VOID,
-                        salesFilteringBottomSheetUIState.isVoidChecked,
-                        onCheckChanged = { type, isChecked ->
-                            onEvent(SalesControlScreenEvent.OnSalesTypeChecked(type, isChecked))
-                        }
-                    )
-                }
-                Column {
-                    SwitchAndSalesType(
-                        SalesFilterType.FILTER_BY_VALID,
-                        salesFilteringBottomSheetUIState.isValidChecked,
-                        onCheckChanged = { type, isChecked ->
-                            onEvent(SalesControlScreenEvent.OnSalesTypeChecked(type, isChecked))
-                        }
-                    )
-                    SwitchAndSalesType(
-                        SalesFilterType.FILTER_BY_COMP,
-                        salesFilteringBottomSheetUIState.isCompChecked,
+                        salesType = salesFilters[item],
+                        isChecked = checkedValue,
                         onCheckChanged = { type, isChecked ->
                             onEvent(SalesControlScreenEvent.OnSalesTypeChecked(type, isChecked))
                         }
@@ -114,16 +113,33 @@ fun SalesFilteringBottomSheet(
                 }
             }
 
+
             Spacer(modifier = Modifier.height(height = height24))
             Text(text = "Seat Number:")
             Spacer(modifier = Modifier.height(height = height16))
-            SeatNumberSelector(
-                seatNumber = salesFilteringBottomSheetUIState.seatNumberSelected,
-                seatList = mockSeatListState(),
-                onSeatNumberSelected = { selected ->
-                    onEvent(SalesControlScreenEvent.OnSeatNumberSelected(selected))
+            Row {
+                SeatNumberSelector(
+                    seatNumber = salesFilteringBottomSheetUIState.seatNumberSelected,
+                    seatList = mockSeatListState(),
+                    onSeatNumberSelected = { selected ->
+                        onEvent(SalesControlScreenEvent.OnSeatNumberSelected(selected))
+                    }
+                )
+
+                Spacer(modifier = Modifier.weight(full))
+                Button(
+                    modifier = Modifier.padding(end = spacing16),
+                    onClick = { onEvent(SalesControlScreenEvent.OnResetClicked) },
+                    colors = ButtonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = Color.White,
+                        disabledContentColor = Color.White,
+                        disabledContainerColor = Color.White
+                    )
+                ) {
+                    Text(text = "Reset")
                 }
-            )
+            }
         }
     }
 }
@@ -132,7 +148,7 @@ fun SalesFilteringBottomSheet(
 fun SeatNumberSelector(
     seatNumber: String?,
     seatList: List<String>,
-    onSeatNumberSelected: (String) -> Unit,
+    onSeatNumberSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(
@@ -162,46 +178,45 @@ fun SeatNumberSelector(
                         onClick = {
                             onSeatNumberSelected.invoke(it)
                             expanded = !expanded
-                        }
-                    ) { Text(text = it) }
+                        },
+                        text = { Text(text = it) }
+                    )
                 }
             }
         }
     }
 }
 
-object SalesFilterType {
-    const val FILTER_BY_VOID = "Void"
-    const val FILTER_BY_MISSED = "Missed"
-    const val FILTER_BY_VALID = "Valid"
-    const val FILTER_BY_COMP = "Complimentary"
-}
-
 @Composable
 fun SwitchAndSalesType(
-    salesType: String,
+    salesType: SalesFilterType,
     isChecked: Boolean,
-    onCheckChanged: (String, Boolean) -> Unit,
+    onCheckChanged: (SalesFilterType, Boolean) -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(start = spacing16)
+        horizontalArrangement = Arrangement.spacedBy(spacing8),
+        modifier = Modifier.padding(start = spacing16, bottom = spacing16)
     ) {
         Switch(
             checked = isChecked,
             onCheckedChange = { onCheckChanged(salesType, isChecked) },
             colors = SwitchDefaults.colors(
-                checkedTrackColor = Color.Gray,
-                uncheckedTrackColor = Color.Gray,
-                checkedThumbColor = Color.Black,
-                uncheckedThumbColor = Color.Black,
+                checkedTrackColor = Color.LightGray,
+                uncheckedTrackColor = Color.LightGray,
+                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                uncheckedThumbColor = MaterialTheme.colorScheme.primary,
             )
         )
-        Text(text = salesType, fontWeight = FontWeight.SemiBold)
+        Text(
+            text = salesType.type,
+            fontWeight = FontWeight.SemiBold,
+            style = MaterialTheme.typography.labelMedium
+        )
     }
 }
 
-@Preview(showBackground = true)
+@ThemePreview
 @Composable
 fun SalesFilteringBottomSheetPreview() {
     SalesFilteringBottomSheet(
@@ -209,7 +224,7 @@ fun SalesFilteringBottomSheetPreview() {
         SalesFilteringBottomSheetUIState(
             isVoidChecked = true,
             isValidChecked = true,
-            isMissedChecked = true,
+            isMissedChecked = false,
             isCompChecked = true,
             seatNumberSelected = "1A"
         ),

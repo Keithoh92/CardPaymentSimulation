@@ -1,15 +1,16 @@
 package com.example.salestestapp.ui.shimmer
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Card
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,14 +21,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.salestestapp.ui.theme.SalesTestAppTheme
-import com.example.testui.common.BaseComposeEvent
+import com.example.compose.AppTheme
+import com.example.salestestapp.common.ThemePreview
 import com.example.salestestapp.ui.shimmer.event.CardPaymentScreenEvent
 import com.example.salestestapp.ui.shimmer.model.CardSignatruePathState
 import com.example.salestestapp.ui.theme.fontSize16
 import com.example.salestestapp.ui.theme.spacing12
+import com.example.testui.common.BaseComposeEvent
 
 @Composable
 fun CardPaymentCardBackFrame(
@@ -49,12 +50,17 @@ fun CardPaymentCardBackFrame(
     )
 
     Card(
-        backgroundColor = Color.Transparent,
+        colors = CardColors(
+            containerColor = Color.Transparent,
+            contentColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            disabledContentColor = Color.Transparent
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .background(brush = brushStill)
             .height(230.dp),
-        elevation = 0.dp
+        elevation = CardDefaults.cardElevation()
     ) {
         Column {
             Spacer(
@@ -111,11 +117,8 @@ fun ScratchPad(
     )
 }
 
-@Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@ThemePreview
 @Composable
 fun CardPaymentCardBackFramePreview() {
-    SalesTestAppTheme() {
-        CardPaymentCardBackFrame(mutableListOf(), {})
-    }
+    AppTheme { CardPaymentCardBackFrame(mutableListOf()) {} }
 }

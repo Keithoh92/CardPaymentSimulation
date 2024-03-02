@@ -1,6 +1,5 @@
 package com.example.salestestapp.ui.shimmer.cardflip
 
-import android.content.res.Configuration
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -8,6 +7,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,9 +18,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,12 +32,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.salestestapp.R
+import com.example.compose.AppTheme
+import com.example.salestestapp.common.ThemePreview
 import com.example.salestestapp.ui.compose.ProgressIndicator
-import com.example.salestestapp.ui.shimmer.model.CardDetails
-import com.example.salestestapp.ui.theme.SalesTestAppTheme
 import com.example.salestestapp.ui.theme.fontSize12
 import com.example.salestestapp.ui.theme.full
 import com.example.salestestapp.ui.theme.size12
@@ -43,15 +43,22 @@ import com.example.salestestapp.ui.theme.spacing12
 import com.example.salestestapp.ui.theme.spacing16
 import com.example.salestestapp.ui.theme.spacing24
 import com.example.salestestapp.ui.theme.spacing32
-import com.example.salestestapp.ui.theme.spacing8
 
 @Composable
-fun CardPaymentCardFrameReading(cardDetails: CardDetails) {
-    val gradientColors = listOf(
-        Color.Gray.copy(alpha = 0.5f),
-        Color.LightGray.copy(alpha = 0.2f),
-        Color.Gray.copy(alpha = 0.5f)
-    )
+fun CardPaymentCardFrameReading() {
+    val gradientColors = if (!isSystemInDarkTheme()) {
+        listOf(
+            Color.Gray.copy(alpha = 0.5f),
+            Color.LightGray.copy(alpha = 0.2f),
+            Color.Gray.copy(alpha = 0.5f)
+        )
+    } else {
+        listOf(
+            Color.LightGray.copy(alpha = 0.5f),
+            Color.Gray.copy(alpha = 0.2f),
+            Color.LightGray.copy(alpha = 0.5f)
+        )
+    }
 
     val transition = rememberInfiniteTransition(label = "")
     val translateAnim = transition.animateFloat(
@@ -77,20 +84,24 @@ fun CardPaymentCardFrameReading(cardDetails: CardDetails) {
             .fillMaxWidth()
             .height(230.dp)
             .background(brush = brush),
-        backgroundColor = Color.Transparent,
-        elevation = 0.dp
+        colors = CardColors(
+            containerColor = Color.Transparent,
+            contentColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            disabledContentColor = Color.Transparent
+        ),
+        elevation = CardDefaults.cardElevation()
     ) {
         Column(
             verticalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.padding(spacing12)
         ) {
-            // Card Type ----- Card Type Symbol
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = spacing16)
+                    .padding(start = spacing16, end = spacing16, top = spacing32)
             ) {
                 Spacer(
                     modifier = Modifier
@@ -100,12 +111,11 @@ fun CardPaymentCardFrameReading(cardDetails: CardDetails) {
                         .background(brush)
                 )
             }
-            // Card Number
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = spacing8)
+                    .padding(vertical = spacing32)
             ) {
                 Surface(
                     modifier = Modifier
@@ -135,15 +145,13 @@ fun CardPaymentCardFrameReading(cardDetails: CardDetails) {
                 )
             }
 
-            // Card Holder Name & Exp date
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = spacing12, horizontal = spacing24)
+                    .padding(vertical = spacing16, horizontal = spacing24)
             ) {
-                // Card Holder name
                 Column {
                     Spacer(
                         modifier = Modifier
@@ -156,7 +164,6 @@ fun CardPaymentCardFrameReading(cardDetails: CardDetails) {
 
                 Spacer(modifier = Modifier.weight(full))
 
-                // Expiry Date
                 Column {
                     Spacer(
                         modifier = Modifier
@@ -171,18 +178,8 @@ fun CardPaymentCardFrameReading(cardDetails: CardDetails) {
     }
 }
 
-@Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@ThemePreview
 @Composable
 fun CardPaymentCardFrameReadingPreview() {
-    val cardDetails = CardDetails(
-        cardHolder = "Keith O'Hare",
-        cardNumber = "1840932124567854",
-        cardType = "Mastercard",
-        cardTypeSymbolResource = R.drawable.mastercard,
-        expiryDate = "08/25"
-    )
-    SalesTestAppTheme {
-        CardPaymentCardFrameReading(cardDetails)
-    }
+    AppTheme { CardPaymentCardFrameReading() }
 }

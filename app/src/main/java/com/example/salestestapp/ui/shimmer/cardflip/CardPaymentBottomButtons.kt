@@ -1,25 +1,24 @@
 package com.example.salestestapp.ui.shimmer.cardflip
 
-import android.content.res.Configuration
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.salestestapp.ui.theme.SalesTestAppTheme
-import com.example.testui.common.BaseComposeEvent
+import com.example.compose.AppTheme
+import com.example.salestestapp.common.ThemePreview
 import com.example.salestestapp.ui.shimmer.event.CardPaymentScreenEvent
 import com.example.salestestapp.ui.theme.fontSize16
 import com.example.salestestapp.ui.theme.pointFive
@@ -27,11 +26,10 @@ import com.example.salestestapp.ui.theme.pointSix
 import com.example.salestestapp.ui.theme.size20
 import com.example.salestestapp.ui.theme.spacing12
 import com.example.salestestapp.ui.theme.spacing8
+import com.example.testui.common.BaseComposeEvent
 
 @Composable
-fun CardPaymentBottomButtons(
-    event: (BaseComposeEvent) -> Unit
-) {
+fun CardPaymentBottomButtons(event: (BaseComposeEvent) -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(space = spacing12),
@@ -40,10 +38,17 @@ fun CardPaymentBottomButtons(
     ) {
         OutlinedButton(
             onClick = { /*TODO*/ },
-            colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = MaterialTheme.colors.primary,
-                backgroundColor = MaterialTheme.colors.surface
-            ),
+            colors = if (!isSystemInDarkTheme()) {
+                ButtonDefaults.outlinedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.surface
+                )
+            } else {
+                ButtonDefaults.outlinedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.onPrimary,
+                    contentColor = MaterialTheme.colorScheme.secondary
+                )
+            },
             modifier = Modifier.weight(pointSix)
         ) {
             Icon(
@@ -60,10 +65,17 @@ fun CardPaymentBottomButtons(
         }
         OutlinedButton(
             onClick = { event(CardPaymentScreenEvent.OnClickVerifySignature) },
-            colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = MaterialTheme.colors.primary,
-                backgroundColor = MaterialTheme.colors.surface
-            ),
+            colors = if (!isSystemInDarkTheme()) {
+                ButtonDefaults.outlinedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.surface
+                )
+            } else {
+                ButtonDefaults.outlinedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.onPrimary,
+                    contentColor = MaterialTheme.colorScheme.secondary
+                )
+            },
             modifier = Modifier.weight(pointSix)
         ) {
             Icon(
@@ -81,11 +93,10 @@ fun CardPaymentBottomButtons(
     }
 }
 
-@Preview(name = "Light Mode", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@ThemePreview
 @Composable
 fun CardPaymentBottomButtonsPreview() {
-    SalesTestAppTheme {
-        CardPaymentBottomButtons({})
+    AppTheme {
+        CardPaymentBottomButtons {}
     }
 }
