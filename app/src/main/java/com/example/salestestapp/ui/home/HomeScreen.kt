@@ -74,7 +74,6 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
                     fontWeight = FontWeight.Bold
                 ),
                 textAlign = TextAlign.Center,
-                color = if (isSystemInDarkTheme()) Color.White else Color.Black
             )
 
             OutlinedButton(
@@ -84,7 +83,8 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
                 Text(
                     text = "Sales Control",
                     style = MaterialTheme.typography.titleSmall,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = if (isSystemInDarkTheme()) Color.White else Color.Black
                 )
             }
         }
