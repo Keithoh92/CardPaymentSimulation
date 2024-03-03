@@ -30,15 +30,7 @@ fun SalesControlListView(
             .fillMaxSize()
             .padding(spacing8)
     ) {
-        Column(
-            modifier = Modifier
-                .border(
-                    width = 0.5.dp,
-                    color = Color.LightGray,
-                    shape = RoundedCornerShape(5.dp)
-                )
-                .weight(full)
-        ) {
+        Column(modifier = Modifier.weight(full)) {
             when {
                 uiState.salesLD.isNotEmpty() -> {
                     Column {

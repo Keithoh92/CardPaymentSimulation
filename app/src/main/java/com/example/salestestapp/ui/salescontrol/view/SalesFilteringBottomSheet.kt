@@ -204,8 +204,8 @@ fun SwitchAndSalesType(
             colors = SwitchDefaults.colors(
                 checkedTrackColor = Color.LightGray,
                 uncheckedTrackColor = Color.LightGray,
-                checkedThumbColor = MaterialTheme.colorScheme.primary,
-                uncheckedThumbColor = MaterialTheme.colorScheme.primary,
+                checkedThumbColor = MaterialTheme.colorScheme.tertiary,
+                uncheckedThumbColor = MaterialTheme.colorScheme.tertiary,
             )
         )
         Text(

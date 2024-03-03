@@ -3,6 +3,7 @@ package com.example.salestestapp.ui.salescontrol.view
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -28,12 +29,12 @@ fun CrewCodesOutlinedButton(
     onChangeSACodeFilter: (String, Int) -> Unit
 ) {
     OutlinedButton(
-        modifier = Modifier.padding(halfSpacing),
+        modifier = Modifier.padding(halfSpacing).height(36.dp),
         onClick = {
             onChangeSACodeFilter(saCode, currentCrewCodeIndex)
         },
         shape = RoundedCornerShape(spacing24),
-        border = BorderStroke(1.dp, Color.Black),
+        border = BorderStroke(1.dp, Color.LightGray),
         colors = if (currentCrewCodeIndex == selectedSalesAssistantCode) {
             ButtonDefaults.outlinedButtonColors(
                 containerColor = Color.LightGray

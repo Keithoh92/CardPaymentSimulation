@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.salestestapp.R
 import com.example.salestestapp.common.ThemePreview
 import com.example.salestestapp.ui.salescontrol.SalesSortFilter
+import com.example.salestestapp.ui.theme.fontSize12
 import com.example.salestestapp.ui.theme.full
 import com.example.salestestapp.ui.theme.iconSize20
 import com.example.salestestapp.ui.theme.spacing8
@@ -36,7 +37,8 @@ fun SalesFilteringBar(
     filterMenuItemVisible: Boolean,
     isEnableSalesControlFilter: Boolean,
     onClickMenuSalesFilterItem: () -> Unit,
-    onClickSortByOption: (Int) -> Unit
+    onClickSortByOption: (Int) -> Unit,
+    numberOfSales: Int
 ) {
 
     var expanded by remember { mutableStateOf(false) }
@@ -46,14 +48,19 @@ fun SalesFilteringBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(start = spacing8, end = spacing8)
     ) {
-        Text(text = "Sort By:", fontWeight = FontWeight.SemiBold)
+        Text(text = "$numberOfSales Sales", modifier = Modifier.padding(start = spacing8))
+        Spacer(modifier = Modifier.weight(full))
+        Text(text = "Sort By:", fontWeight = FontWeight.SemiBold, fontSize = fontSize12)
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .clickable { expanded = !expanded }
                 .padding(start = spacing8)
         ) {
-            Text(text = stringResource(id = orderByTimeOrSeatNumberSelection.salesSortingTitle))
+            Text(
+                text = stringResource(id = orderByTimeOrSeatNumberSelection.salesSortingTitle),
+                fontSize = fontSize12
+            )
             Spacer(modifier = Modifier.width(spacing8))
             Icon(
                 imageVector = Icons.Filled.ArrowDropDown,
@@ -77,7 +84,7 @@ fun SalesFilteringBar(
                 }
             }
         }
-        Spacer(modifier = Modifier.weight(full))
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(spacing8),
@@ -87,8 +94,9 @@ fun SalesFilteringBar(
         ) {
             if (filterMenuItemVisible && isEnableSalesControlFilter) {
                 Text(
-                    text = "Sales Control",
-                    fontWeight = FontWeight.SemiBold
+                    text = "Filter",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = fontSize12
                 )
                 Icon(
                     imageVector = Icons.Outlined.FilterList,
@@ -110,6 +118,7 @@ fun SalesFilteringBarPreview() {
         isEnableSalesControlFilter = true,
         filterMenuItemVisible = true,
         onClickMenuSalesFilterItem = {},
-        onClickSortByOption = {}
+        onClickSortByOption = {},
+        numberOfSales = 10
     )
 }
