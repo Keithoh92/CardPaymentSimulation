@@ -104,7 +104,8 @@ fun SalesControlScreen(
                         },
                         onClickSortByOption = {
                             onEvent(SalesControlScreenEvent.OnClickSortByOption(it))
-                        }
+                        },
+                        numberOfSales = uiState.salesLD.size
                     )
                     SalesControlListView(uiState, onEvent)
 
@@ -142,7 +143,7 @@ fun mockUIState(): StateFlow<SalesListingUIState> {
             isLoading = false,
             isRefreshing = false,
             totalSalesValue = 5.99,
-            showBottomSheet = true,
+            showBottomSheet = false,
             selectedSalesAssistantIndex = 1,
             salesAssistantCodes = listOf("All", "1234", "4231")
         )

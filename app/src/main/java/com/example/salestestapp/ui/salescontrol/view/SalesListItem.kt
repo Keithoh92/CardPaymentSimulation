@@ -2,6 +2,8 @@ package com.example.salestestapp.ui.salescontrol.view
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +18,7 @@ import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -48,7 +51,15 @@ fun SalesListItem(saleInfoUIState: SaleInfoUIState) {
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(spacing8),
-            modifier = Modifier.padding(horizontal = spacing16, vertical = spacing8),
+            modifier = Modifier
+                .background(
+                    if (isSystemInDarkTheme()) {
+                        MaterialTheme.colorScheme.outlineVariant
+                    } else {
+                        Color.LightGray.copy(alpha = 0.5f)
+                    }
+                )
+                .padding(horizontal = spacing16, vertical = spacing8),
         ) {
             Row(
                 modifier = Modifier.padding(horizontal = spacing8),
