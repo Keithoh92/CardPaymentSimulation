@@ -1,5 +1,6 @@
 package com.example.salestestapp.ui.home
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -47,7 +49,8 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
                 Text(
                     text = "Payment Simulation",
                     style = MaterialTheme.typography.titleSmall,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = if (isSystemInDarkTheme()) Color.White else Color.Black
                 )
             }
 
@@ -58,7 +61,8 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
                 Text(
                     text = "Payment Signature Simulation",
                     style = MaterialTheme.typography.titleSmall,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = if (isSystemInDarkTheme()) Color.White else Color.Black
                 )
             }
 
@@ -69,7 +73,8 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold
                 ),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = if (isSystemInDarkTheme()) Color.White else Color.Black
             )
 
             OutlinedButton(
