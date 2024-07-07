@@ -12,44 +12,39 @@ import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.salestestapp.ui.shimmer.cardflip.model.CardFace
+import com.example.salestestapp.ui.compose.contract.ComposeContract
+import com.example.salestestapp.ui.compose.contract.LoadingType
+import com.example.salestestapp.ui.compose.contract.composeContractDelegate
 import com.example.salestestapp.ui.shimmer.effect.CardPaymentEffect
 import com.example.salestestapp.ui.shimmer.event.CardPaymentScreenEvent
 import com.example.salestestapp.ui.shimmer.model.CardPaymentScreenAlertBannerConfig
 import com.example.salestestapp.ui.shimmer.model.CardSignatruePathState
 import com.example.salestestapp.ui.shimmer.model.SelectedOption
 import com.example.salestestapp.ui.shimmer.state.CardPaymentScreenUIState
+import com.example.salestestapp.ui.shimmer.view.cardflip.model.CardFace
 import com.example.salestestapp.ui.theme.DarkGreen
 import com.example.salestestapp.ui.theme.LightGreen
-import com.example.testui.common.BaseComposeEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 @HiltViewModel
-class CardPaymentScreenViewModel@Inject constructor() : ViewModel() {
-
-    private var _cardPaymentUIState = MutableStateFlow(CardPaymentScreenUIState())
-    val cardPaymentUIState = _cardPaymentUIState.asStateFlow()
-
-    private val _effect = Channel<CardPaymentEffect>(Channel.UNLIMITED)
-    val effect: Flow<CardPaymentEffect> = _effect.receiveAsFlow()
+class CardPaymentScreenViewModel@Inject constructor()
+    : ViewModel(),
+    ComposeContract<CardPaymentScreenUIState, CardPaymentScreenEvent, CardPaymentEffect>
+    by composeContractDelegate(CardPaymentScreenUIState.initial())
+{
 
     var isSignature = false
 
     init {
+        setLoadingResult(LoadingType.WithTitle())
         simulateCardRead()
     }
 
-    fun onEvent(event: BaseComposeEvent) {
+    override fun onEvent(event: CardPaymentScreenEvent) {
         when (event) {
             is CardPaymentScreenEvent.OnClickChangeView -> onClickChangeView()
             is CardPaymentScreenEvent.OnSelectedChipChanged -> onSelectedChipChanged(event.index)
@@ -61,34 +56,34 @@ class CardPaymentScreenViewModel@Inject constructor() : ViewModel() {
     }
 
     private fun navigateBack() = viewModelScope.launch {
-        _effect.send(CardPaymentEffect.Navigation.Back)
+        emitEffect(CardPaymentEffect.Navigation.Back)
     }
 
     private fun showToast(toast: CardPaymentEffect.Toast) = viewModelScope.launch {
-        _effect.send(toast)
+        emitEffect(toast)
     }
 
-    private fun isSignatureDrawn() = cardPaymentUIState.value.path.any { it.path.isEmpty.not() }
+    private fun isSignatureDrawn() = uiState.value.path.any { it.path.isEmpty.not() }
 
     private fun onClickVerifySignature() = viewModelScope.launch {
         if (!isSignature) return@launch
         if (!isSignatureDrawn()) { showToast(CardPaymentEffect.Toast.SignatureNotDrawnToast) }
 
         val newBitmap = createBitmapFromCanvas(
-            cardPaymentUIState.value.canvasWidth,
-            cardPaymentUIState.value.canvasHeight,
-            cardPaymentUIState.value.path
+            uiState.value.canvasWidth,
+            uiState.value.canvasHeight,
+            uiState.value.path
         )
 
         if (newBitmap != null) {
-            _effect.send(CardPaymentEffect.OnAcceptSignature(newBitmap))
+            emitEffect(CardPaymentEffect.OnAcceptSignature(newBitmap))
         }
     }
 
     private fun onClearSignature() {
-        cardPaymentUIState.value.path.clear()
-        _cardPaymentUIState.update {
-            it.copy(
+        uiState.value.path.clear()
+        setLoadedResult {
+            copy(
                 path = mutableListOf(
                     CardSignatruePathState(path = Path())
                 )
@@ -120,8 +115,8 @@ class CardPaymentScreenViewModel@Inject constructor() : ViewModel() {
         canvasWidth: Int,
         canvasHeight: Int
     ) {
-        _cardPaymentUIState.update {
-            it.copy(
+        setLoadedResult {
+            copy(
                 path = path,
                 canvasWidth = canvasWidth,
                 canvasHeight = canvasHeight
@@ -130,8 +125,8 @@ class CardPaymentScreenViewModel@Inject constructor() : ViewModel() {
     }
 
     private fun onSelectedChipChanged(index: Int) {
-        _cardPaymentUIState.update {
-            it.copy(
+        setLoadedResult {
+            copy(
                 selectedChipIndex = index,
                 paymentBreakdownIsShowing = index == 0
             )
@@ -139,17 +134,19 @@ class CardPaymentScreenViewModel@Inject constructor() : ViewModel() {
     }
 
     private fun onClickChangeView() {
-        val cardSignatureViewIsShowing = cardPaymentUIState.value.cardSignatureIsShowing
+        val cardSignatureViewIsShowing = uiState.value.cardSignatureIsShowing
 
-        _cardPaymentUIState.update {
-            it.copy(
+        setLoadedResult {
+            copy(
                 cardSignatureIsShowing = !cardSignatureViewIsShowing,
-                cardFaceLoadingAndDetails = cardPaymentUIState.value.cardFaceLoadingAndDetails.getNext(true),
+                cardFaceLoadingAndDetails = uiState.value.cardFaceLoadingAndDetails
+                    .getNext(true),
             )
         }
     }
 
     private fun simulateCardRead() = viewModelScope.launch {
+        setLoadedResult { CardPaymentScreenUIState.initial() }
         delay(6000)
         val testing: ArrayList<String> = arrayListOf("Visa", "Mastercard")
 
@@ -157,12 +154,12 @@ class CardPaymentScreenViewModel@Inject constructor() : ViewModel() {
             SelectedOption(it, false)
         }
 
-        _cardPaymentUIState.update {
-            it.copy(
+        setLoadedResult {
+            copy(
                 cardReadSuccessfully = true,
-                cardDetails = cardPaymentUIState.value.cardDetails.copy(isChipAndSignature = isSignature),
+                cardDetails = uiState.value.cardDetails.copy(isChipAndSignature = isSignature),
                 paymentBreakdownIsShowing = false,
-                cardFaceLoadingAndDetails = cardPaymentUIState.value.cardFaceLoadingAndDetails.getNext(isSignature),
+                cardFaceLoadingAndDetails = uiState.value.cardFaceLoadingAndDetails.getNext(isSignature),
                 currentCardFace = CardFace.Loading,
                 cardSignatureIsShowing = true,
                 selectedChipIndex = 1,

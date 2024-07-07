@@ -1,4 +1,4 @@
-package com.example.salestestapp.ui.shimmer.cardflip
+package com.example.salestestapp.ui.shimmer.view.cardflip
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -26,10 +26,9 @@ import com.example.salestestapp.ui.theme.pointSix
 import com.example.salestestapp.ui.theme.size20
 import com.example.salestestapp.ui.theme.spacing12
 import com.example.salestestapp.ui.theme.spacing8
-import com.example.testui.common.BaseComposeEvent
 
 @Composable
-fun CardPaymentBottomButtons(event: (BaseComposeEvent) -> Unit) {
+fun CardPaymentBottomButtons(event: (CardPaymentScreenEvent) -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(space = spacing12),

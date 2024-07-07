@@ -1,4 +1,4 @@
-package com.example.salestestapp.ui.shimmer.cardflip.model
+package com.example.salestestapp.ui.shimmer.view.cardflip.model
 
 enum class CardFace(val angle: Float) {
 

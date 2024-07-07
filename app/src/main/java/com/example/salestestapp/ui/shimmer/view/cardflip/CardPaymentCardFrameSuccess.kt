@@ -1,4 +1,4 @@
-package com.example.salestestapp.ui.shimmer.cardflip
+package com.example.salestestapp.ui.shimmer.view.cardflip
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

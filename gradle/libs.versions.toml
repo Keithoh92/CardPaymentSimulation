@@ -1,0 +1,59 @@
+[versions]
+activity = "1.9.0"
+androidx-lifecycle = "2.8.1"
+compose = "2024.05.00"
+compose-compiler = "1.5.14"
+androidx-core = "1.13.1"
+junit = "1.1.5"
+espresso = "3.5.1"
+joda-time = "2.12.1"
+ramcosta = "1.1.2-beta"
+#hilt-navigation-compose = "1.2.0"
+hilt-android = "2.49"
+dagger-hilt = "2.51.1"
+hilt-nav = "1.2.0"
+androidx-hilt-compiler = "1.2.0"
+lottie = "6.0.0"
+agp = "8.4.0"
+kotlin = "1.9.23"
+dagger-hilt-plugin= "2.51.1"
+# AndroidSDK
+compileSdk = "34"
+minSdk = "24"
+targetSdk = "33"
+
+[libraries]
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose" }
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+compose-material = { group = "androidx.compose.material", name = "material" }
+compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
+compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junit" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
+joda-time = { module = "joda-time:joda-time", version.ref = "joda-time" }
+ramcosta-compose-navigation = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "ramcosta" }
+dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "dagger-hilt" }
+dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "dagger-hilt" }
+androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidx-hilt-compiler" }
+androidx-hilt-navigation = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-nav" }
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
+
+[bundles]
+compose = ["compose-material", "compose-material-icons-core", "compose-material-icons-extended", "compose-material3", "compose-ui", "compose-ui-graphics", "compose-ui-tooling", "compose-ui-tooling-preview"]
+compose-test = ["compose-ui-test-junit4", "compose-ui-test-manifest"]
+lottie = ["lottie", "lottie-compose"]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt-plugin" }

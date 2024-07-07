@@ -5,10 +5,11 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import com.example.salestestapp.ui.shimmer.cardflip.CardFaceDisplay
+import com.example.salestestapp.ui.compose.contract.CollectSideEffect
+import com.example.salestestapp.ui.compose.contract.unpackWithUIResult
+import com.example.salestestapp.ui.shimmer.view.CardFaceDisplay
 import com.example.salestestapp.ui.shimmer.effect.CardPaymentEffect
 import com.example.salestestapp.ui.shimmer.viewmodel.CardPaymentScreenViewModel
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun CardPaymentScreenMain(
@@ -19,21 +20,21 @@ fun CardPaymentScreenMain(
 ) {
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.isSignature = isSignature
-        viewModel.effect.collectLatest {
-            when (it) {
-                is CardPaymentEffect.Toast -> {
-                    Toast.makeText(context, it.messageResId, Toast.LENGTH_LONG).show()
-                }
-                is CardPaymentEffect.Navigation.Back -> onBack.invoke()
-                is CardPaymentEffect.OnAcceptSignature -> { onAcceptSignature.invoke(it.bitmap) }
+    val (uiResult, event, effect) = viewModel.unpackWithUIResult()
+
+    CollectSideEffect(sideEffect = effect) {
+        when (it) {
+            is CardPaymentEffect.Toast -> {
+                Toast.makeText(context, it.messageResId, Toast.LENGTH_LONG).show()
             }
+            is CardPaymentEffect.Navigation.Back -> onBack.invoke()
+            is CardPaymentEffect.OnAcceptSignature -> { onAcceptSignature.invoke(it.bitmap) }
         }
     }
+    LaunchedEffect(key1 = Unit) { viewModel.isSignature = isSignature }
 
     CardFaceDisplay(
-        cardPaymentUIState = viewModel.cardPaymentUIState,
-        event = viewModel::onEvent
+        uiResult = uiResult,
+        event = event
     )
 }

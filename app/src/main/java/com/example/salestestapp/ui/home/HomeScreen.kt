@@ -1,6 +1,5 @@
 package com.example.salestestapp.ui.home
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,7 +49,7 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
                     text = "Payment Simulation",
                     style = MaterialTheme.typography.titleSmall,
                     textAlign = TextAlign.Center,
-                    color = if (isSystemInDarkTheme()) Color.White else Color.Black
+                    color = Color.Black
                 )
             }
 
@@ -62,7 +61,7 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
                     text = "Payment Signature Simulation",
                     style = MaterialTheme.typography.titleSmall,
                     textAlign = TextAlign.Center,
-                    color = if (isSystemInDarkTheme()) Color.White else Color.Black
+                    color = Color.Black
                 )
             }
 
@@ -84,7 +83,7 @@ fun HomeScreen(onEvent: (HomeScreenEvent) -> Unit) {
                     text = "Sales Control",
                     style = MaterialTheme.typography.titleSmall,
                     textAlign = TextAlign.Center,
-                    color = if (isSystemInDarkTheme()) Color.White else Color.Black
+                    color = Color.Black
                 )
             }
         }

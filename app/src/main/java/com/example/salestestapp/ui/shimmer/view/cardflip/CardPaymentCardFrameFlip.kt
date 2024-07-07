@@ -1,4 +1,4 @@
-package com.example.salestestapp.ui.shimmer.cardflip
+package com.example.salestestapp.ui.shimmer.view.cardflip
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.compose.AppTheme
-import com.example.salestestapp.ui.shimmer.cardflip.model.CardFace
+import com.example.salestestapp.ui.shimmer.view.cardflip.model.CardFace
 import com.example.salestestapp.ui.theme.spacing32
 
 @Composable

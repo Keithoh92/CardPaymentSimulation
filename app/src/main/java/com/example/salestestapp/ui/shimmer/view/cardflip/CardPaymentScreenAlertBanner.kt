@@ -1,4 +1,4 @@
-package com.example.salestestapp.ui.shimmer.cardflip
+package com.example.salestestapp.ui.shimmer.view.cardflip
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
