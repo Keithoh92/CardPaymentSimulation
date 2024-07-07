@@ -2,15 +2,14 @@ package com.example.salestestapp.ui.salescontrol.view
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.example.salestestapp.common.ThemePreview
 import com.example.salestestapp.ui.salescontrol.event.SalesControlScreenEvent
 import com.example.salestestapp.ui.salescontrol.state.SalesListingUIState
@@ -60,5 +59,5 @@ fun SalesControlListView(
 @ThemePreview
 @Composable
 fun SalesControlListViewPreview() {
-    SalesControlListView(SalesListingUIState(), onEvent = {})
+    SalesControlListView(SalesListingUIState.initial(), onEvent = {})
 }

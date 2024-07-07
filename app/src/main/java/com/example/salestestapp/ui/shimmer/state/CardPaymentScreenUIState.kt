@@ -1,33 +1,59 @@
 package com.example.salestestapp.ui.shimmer.state
 
-import com.example.salestestapp.ui.shimmer.cardflip.model.CardFace
+import com.example.salestestapp.ui.shimmer.view.cardflip.model.CardFace
 import com.example.salestestapp.ui.shimmer.model.CardDetails
 import com.example.salestestapp.ui.shimmer.model.CardPaymentScreenAlertBannerConfig
 import com.example.salestestapp.ui.shimmer.model.CardSignatruePathState
 import com.example.salestestapp.ui.shimmer.model.PaymentBreakdown
 import com.example.salestestapp.ui.shimmer.model.SelectedOption
 
-data class CardPaymentScreenUIState constructor(
-    val cardDetails: CardDetails = CardDetails(),
-    val paymentBreakdown: PaymentBreakdown = PaymentBreakdown(),
-    val acceptButtonEnabled: Boolean = true,
-    val acceptAndPrintButtonEnabled: Boolean = true,
-    val verifySignatureButtonEnabled: Boolean = false,
-    val cardReadSuccessfully: Boolean = false,
-    val paymentBreakdownCollapsed: Boolean = true,
-    val cardSignatureCollapsed: Boolean = false,
-    val paymentBreakdownIsShowing: Boolean = true,
-    val cardSignatureIsShowing: Boolean = false,
-    val selectedChipIndex: Int = 0,
-    val currentCardFace: CardFace = CardFace.Loading,
-    val cardFaceLoadingAndDetails: CardFace = CardFace.Loading,
-    val showAlertBanner: Boolean = true,
-    val showBottomSheet: Boolean = false,
+data class CardPaymentScreenUIState(
+    val cardDetails: CardDetails,
+    val paymentBreakdown: PaymentBreakdown,
+    val acceptButtonEnabled: Boolean,
+    val acceptAndPrintButtonEnabled: Boolean,
+    val verifySignatureButtonEnabled: Boolean,
+    val cardReadSuccessfully: Boolean,
+    val paymentBreakdownCollapsed: Boolean,
+    val cardSignatureCollapsed: Boolean,
+    val paymentBreakdownIsShowing: Boolean,
+    val cardSignatureIsShowing: Boolean,
+    val selectedChipIndex: Int,
+    val currentCardFace: CardFace,
+    val cardFaceLoadingAndDetails: CardFace,
+    val showAlertBanner: Boolean,
+    val showBottomSheet: Boolean,
 
-    val path: MutableList<CardSignatruePathState> = mutableListOf(CardSignatruePathState()),
-    val canvasWidth: Int = 0,
-    val canvasHeight: Int = 0,
-    val applications: List<SelectedOption> = emptyList(),
-    val showSelectionDialog: Boolean = false,
-    val cardPaymentAlertBannerConfig: CardPaymentScreenAlertBannerConfig = CardPaymentScreenAlertBannerConfig()
-)
+    val path: MutableList<CardSignatruePathState>,
+    val canvasWidth: Int,
+    val canvasHeight: Int,
+    val applications: List<SelectedOption>,
+    val showSelectionDialog: Boolean,
+    val cardPaymentAlertBannerConfig: CardPaymentScreenAlertBannerConfig
+) {
+    companion object {
+        fun initial() = CardPaymentScreenUIState(
+            cardDetails = CardDetails(),
+            paymentBreakdown = PaymentBreakdown(),
+            acceptButtonEnabled = true,
+            acceptAndPrintButtonEnabled = true,
+            verifySignatureButtonEnabled = false,
+            cardReadSuccessfully = false,
+            paymentBreakdownCollapsed = true,
+            cardSignatureCollapsed = false,
+            paymentBreakdownIsShowing = true,
+            cardSignatureIsShowing = false,
+            selectedChipIndex = 0,
+            currentCardFace = CardFace.Loading,
+            cardFaceLoadingAndDetails = CardFace.Loading,
+            showAlertBanner = true,
+            showBottomSheet = false,
+            path = mutableListOf(CardSignatruePathState()),
+            canvasWidth = 0,
+            canvasHeight = 0,
+            applications = emptyList(),
+            showSelectionDialog = false,
+            cardPaymentAlertBannerConfig = CardPaymentScreenAlertBannerConfig()
+        )
+    }
+}

@@ -1,4 +1,4 @@
-package com.example.salestestapp.ui.shimmer
+package com.example.salestestapp.ui.shimmer.view
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding

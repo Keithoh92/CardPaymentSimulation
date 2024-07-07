@@ -2,6 +2,11 @@ package com.example.salestestapp.ui.salescontrol.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.salestestapp.R
+import com.example.salestestapp.ui.common.DialogType
+import com.example.salestestapp.ui.compose.contract.ComposeContract
+import com.example.salestestapp.ui.compose.contract.LoadingType
+import com.example.salestestapp.ui.compose.contract.composeContractDelegate
 import com.example.salestestapp.ui.salescontrol.SalesSortFilter
 import com.example.salestestapp.ui.salescontrol.effect.SalesControlEffect
 import com.example.salestestapp.ui.salescontrol.enums.SaleStatus
@@ -9,31 +14,19 @@ import com.example.salestestapp.ui.salescontrol.enums.SalesFilterType
 import com.example.salestestapp.ui.salescontrol.event.SalesControlScreenEvent
 import com.example.salestestapp.ui.salescontrol.model.SaleInfoUIState
 import com.example.salestestapp.ui.salescontrol.model.mockSalesInfo
-import com.example.salestestapp.ui.salescontrol.state.SalesFilteringBottomSheetUIState
 import com.example.salestestapp.ui.salescontrol.state.SalesListingUIState
+import com.example.salestestapp.util.StringResHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SalesControlViewModel@Inject constructor() : ViewModel() {
-
-    private val _uiState = MutableStateFlow(SalesListingUIState())
-    val uiState: StateFlow<SalesListingUIState> = this._uiState.asStateFlow()
-
-    private val _bottomSheetUIState = MutableStateFlow(SalesFilteringBottomSheetUIState())
-    val bottomSheetUIState: StateFlow<SalesFilteringBottomSheetUIState> =
-        this._bottomSheetUIState.asStateFlow()
-
-    private val _effect = Channel<SalesControlEffect>(Channel.UNLIMITED)
-    val effect: Flow<SalesControlEffect> = _effect.receiveAsFlow()
+class SalesControlViewModel @Inject constructor(
+    private val stringResHelper: StringResHelper,
+) : ViewModel(),
+    ComposeContract<SalesListingUIState, SalesControlScreenEvent, SalesControlEffect>
+    by composeContractDelegate(SalesListingUIState.initial()
+) {
 
     private var salesAssistantFilter: String = FILTER_BY_ALL
 
@@ -49,10 +42,10 @@ class SalesControlViewModel@Inject constructor() : ViewModel() {
             if (!listOfCrewCodes.contains(it.salesAssistantCode))
                 listOfCrewCodes.add(it.salesAssistantCode)
         }
-        _uiState.update { it.copy(salesAssistantCodes = listOfCrewCodes) }
+        setLoadedResult { copy(salesAssistantCodes = listOfCrewCodes) }
     }
 
-    fun onEvent(event: SalesControlScreenEvent) {
+    override fun onEvent(event: SalesControlScreenEvent) {
         when (event) {
             is SalesControlScreenEvent.OnSeatNumberSelected ->
                 onChangeSeatNumberFilter(event.seatNumber)
@@ -63,7 +56,7 @@ class SalesControlViewModel@Inject constructor() : ViewModel() {
             is SalesControlScreenEvent.OnClose -> navigateTo(SalesControlEffect.Navigation.OnBack)
             is SalesControlScreenEvent.OnClickMenuSalesFilterItem -> openCloseBottomSheet()
             is SalesControlScreenEvent.StopRefreshing ->
-                _uiState.update { it.copy(isRefreshing = false) }
+                setLoadedResult { copy(isRefreshing = false) }
             is SalesControlScreenEvent.OnRefresh -> refreshSales()
             is SalesControlScreenEvent.OnResetClicked -> resetSales()
             is SalesControlScreenEvent.OnChangeCrewCodeFilter ->
@@ -72,37 +65,44 @@ class SalesControlViewModel@Inject constructor() : ViewModel() {
     }
 
     private fun handleCrewFilterChanged(salesAssistantCode: String, selectedIndex: Int) {
-        _uiState.update { it.copy(selectedSalesAssistantIndex = selectedIndex) }
+        setLoadedResult { copy(selectedSalesAssistantIndex = selectedIndex) }
         salesAssistantFilter = salesAssistantCode
         filterSales()
     }
 
     private fun refreshSales() {
+        setLoadingResult(LoadingType.WithTitle())
         filterSales()
     }
 
     private fun resetSales() {
-        _bottomSheetUIState.update { it.copy(seatNumberSelected = FILTER_BY_ALL) }
+        setLoadedResult {
+            copy(
+                salesFilteringBottomSheetUIState = salesFilteringBottomSheetUIState.copy(
+                    seatNumberSelected = FILTER_BY_ALL
+                )
+            )
+        }
         resetSalesTypeFiltersToAll()
-        _uiState.update { it.copy(selectedSalesAssistantIndex = 0) }
+        setLoadedResult { copy(selectedSalesAssistantIndex = 0) }
         salesAssistantFilter = FILTER_BY_ALL
         filterSales()
     }
 
     private fun navigateTo(destination: SalesControlEffect.Navigation) = viewModelScope.launch {
-        _effect.send(destination)
+        emitEffect(destination)
     }
 
     private fun openCloseBottomSheet() = viewModelScope.launch {
         if (uiState.value.showBottomSheet) {
-            _uiState.update { it.copy(showBottomSheet = false) }
+            setLoadedResult { copy(showBottomSheet = false) }
         } else {
-            _uiState.update { it.copy(showBottomSheet = true) }
+            setLoadedResult { copy(showBottomSheet = true) }
         }
     }
 
     private fun closeBottomSheet() {
-        _uiState.update { it.copy(showBottomSheet = false) }
+        setLoadedResult { copy(showBottomSheet = false) }
     }
 
     private fun updateSalesTypeFiltersCheckedState(filterBySaleStatusList: List<SaleStatus>) {
@@ -110,12 +110,14 @@ class SalesControlViewModel@Inject constructor() : ViewModel() {
     }
 
     private fun resetSalesTypeFiltersToAll() {
-        _bottomSheetUIState.update {
-            it.copy(
-                isValidChecked = true,
-                isVoidChecked = true,
-                isMissedChecked = true,
-                isCompChecked = true,
+        setLoadedResult {
+            copy(
+                salesFilteringBottomSheetUIState = salesFilteringBottomSheetUIState.copy(
+                    isValidChecked = true,
+                    isVoidChecked = true,
+                    isMissedChecked = true,
+                    isCompChecked = true,
+                )
             )
         }
         filterSales()
@@ -126,9 +128,9 @@ class SalesControlViewModel@Inject constructor() : ViewModel() {
 
     private fun filterSales() = viewModelScope.launch {
         var filteredSales: List<SaleInfoUIState> = mockSalesInfo()
-        val seatNumber = when (bottomSheetUIState.value.seatNumberSelected) {
+        val seatNumber = when (uiState.value.salesFilteringBottomSheetUIState.seatNumberSelected) {
             FILTER_BY_ALL -> null
-            else -> bottomSheetUIState.value.seatNumberSelected
+            else -> uiState.value.salesFilteringBottomSheetUIState.seatNumberSelected
         }
 
         val salesAssistantCode = when (salesAssistantFilter) {
@@ -153,7 +155,7 @@ class SalesControlViewModel@Inject constructor() : ViewModel() {
 
         updateSales(filteredSales)
 
-        _uiState.update { it.copy(isRefreshing = false) }
+        setLoadedResult { copy(isRefreshing = false) }
     }
 
     private fun filterBySACode(
@@ -169,38 +171,80 @@ class SalesControlViewModel@Inject constructor() : ViewModel() {
     ) = sales.filter { it.seatNumber == seatNumber }
 
     private fun updateSales(listOfSales: List<SaleInfoUIState>) {
-        _uiState.update { it.copy(salesLD = listOfSales) }
+        setLoadedResult { copy(salesLD = listOfSales) }
     }
 
     private fun getSalesTypeFiltersChecked(): List<SaleStatus> {
         val saleTypesChecked = mutableListOf<SaleStatus>()
 
-        if (bottomSheetUIState.value.isValidChecked) saleTypesChecked.add(SaleStatus.VALID)
-        if (bottomSheetUIState.value.isVoidChecked) saleTypesChecked.add(SaleStatus.VOID)
-        if (bottomSheetUIState.value.isMissedChecked) saleTypesChecked.add(SaleStatus.MISSED)
-        if (bottomSheetUIState.value.isCompChecked) saleTypesChecked.add(SaleStatus.COMPLIMENTARY)
+        if (uiState.value.salesFilteringBottomSheetUIState.isValidChecked) {
+            saleTypesChecked.add(SaleStatus.VALID)
+        }
+        if (uiState.value.salesFilteringBottomSheetUIState.isVoidChecked) {
+            saleTypesChecked.add(SaleStatus.VOID)
+        }
+        if (uiState.value.salesFilteringBottomSheetUIState.isMissedChecked) {
+            saleTypesChecked.add(SaleStatus.MISSED)
+        }
+        if (uiState.value.salesFilteringBottomSheetUIState.isCompChecked) {
+            saleTypesChecked.add(SaleStatus.COMPLIMENTARY)
+        }
 
         return saleTypesChecked
     }
 
     private fun displayTheToast(message: String) = viewModelScope.launch {
-        _effect.send(SalesControlEffect.Toast(message))
+        emitEffect(SalesControlEffect.Toast(message))
+    }
+
+    private fun showLoadingDialog() {
+        setLoadedResult {
+            copy(
+                dialogType = DialogType.Loading(
+                    stringResHelper.getString(R.string.loading_please_wait)
+                )
+            )
+        }
     }
 
     private fun onSalesTypeChecked(salesTypes: SalesFilterType, isChecked: Boolean) = viewModelScope.launch {
 
         when (salesTypes) {
             SalesFilterType.FILTER_BY_COMP -> {
-                _bottomSheetUIState.update { it.copy(isCompChecked = !isChecked) }
+                setLoadedResult {
+                    copy(
+                        salesFilteringBottomSheetUIState = salesFilteringBottomSheetUIState.copy(
+                            isCompChecked = !isChecked
+                        ),
+                    )
+                }
             }
             SalesFilterType.FILTER_BY_VALID -> {
-                _bottomSheetUIState.update { it.copy(isValidChecked = !isChecked) }
+                setLoadedResult {
+                    copy(
+                        salesFilteringBottomSheetUIState = salesFilteringBottomSheetUIState.copy(
+                            isValidChecked = !isChecked
+                        )
+                    )
+                }
             }
             SalesFilterType.FILTER_BY_VOID -> {
-                _bottomSheetUIState.update { it.copy(isVoidChecked = !isChecked) }
+                setLoadedResult {
+                    copy(
+                        salesFilteringBottomSheetUIState = salesFilteringBottomSheetUIState.copy(
+                            isVoidChecked = !isChecked
+                        )
+                    )
+                }
             }
             else -> {
-                _bottomSheetUIState.update { it.copy(isMissedChecked = !isChecked) }
+                setLoadedResult {
+                    copy(
+                        salesFilteringBottomSheetUIState = salesFilteringBottomSheetUIState.copy(
+                            isMissedChecked = !isChecked
+                        )
+                    )
+                }
             }
         }
 
@@ -208,8 +252,8 @@ class SalesControlViewModel@Inject constructor() : ViewModel() {
     }
 
     private fun onClickOrderChange(sortingOptionSelected: Int) {
-        _uiState.update {
-            it.copy(
+        setLoadedResult {
+            copy(
                 sortingBySelection =
                     SalesSortFilter.getByValue(sortingOptionSelected) ?: SalesSortFilter.TIME
             )
@@ -224,7 +268,7 @@ class SalesControlViewModel@Inject constructor() : ViewModel() {
 
     private fun orderSalesByTimeStamp() {
         val comparator  = getTimeStampSortingComparator()
-        _uiState.update { it.copy(salesLD = uiState.value.salesLD.sortedWith(comparator)) }
+        setLoadedResult { copy(salesLD = uiState.value.salesLD.sortedWith(comparator)) }
     }
 
     private fun getTimeStampSortingComparator(): Comparator<SaleInfoUIState> {
@@ -234,8 +278,8 @@ class SalesControlViewModel@Inject constructor() : ViewModel() {
     }
 
     private fun orderSalesBySeatNumber() {
-        _uiState.update {
-            it.copy(
+        setLoadedResult {
+            copy(
                 salesLD = uiState.value.salesLD.sortedWith(
                     SaleInfoUIState.seatNumberComparator(
                         "1A,1B,1C,1D,1E,2A,2B,2C,2D,2E,3A,3B,3C,3D,3E,4A,4B,4C,4D,4E"
@@ -246,7 +290,13 @@ class SalesControlViewModel@Inject constructor() : ViewModel() {
     }
 
     private fun onChangeSeatNumberFilter(seatNumber: String) {
-        _bottomSheetUIState.update { it.copy(seatNumberSelected = seatNumber) }
+        setLoadedResult {
+            copy(
+                salesFilteringBottomSheetUIState = salesFilteringBottomSheetUIState.copy(
+                    seatNumberSelected = seatNumber
+                )
+            )
+        }
         filterSales()
     }
 

@@ -1,4 +1,4 @@
-package com.example.salestestapp.ui.shimmer.cardflip
+package com.example.salestestapp.ui.shimmer.view
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -7,7 +7,6 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,9 +32,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.compose.AppTheme
 import com.example.salestestapp.common.ThemePreview
 import com.example.salestestapp.ui.compose.ProgressIndicator
+import com.example.salestestapp.ui.theme.SalesTestAppTheme
 import com.example.salestestapp.ui.theme.fontSize12
 import com.example.salestestapp.ui.theme.full
 import com.example.salestestapp.ui.theme.size12
@@ -43,32 +42,22 @@ import com.example.salestestapp.ui.theme.spacing12
 import com.example.salestestapp.ui.theme.spacing16
 import com.example.salestestapp.ui.theme.spacing24
 import com.example.salestestapp.ui.theme.spacing32
+import com.example.salestestapp.ui.theme.spacing8
 
 @Composable
-fun CardPaymentCardFrameReading() {
-    val gradientColors = if (!isSystemInDarkTheme()) {
-        listOf(
-            Color.Gray.copy(alpha = 0.5f),
-            Color.LightGray.copy(alpha = 0.2f),
-            Color.Gray.copy(alpha = 0.5f)
-        )
-    } else {
-        listOf(
-            Color.LightGray.copy(alpha = 0.5f),
-            Color.Gray.copy(alpha = 0.2f),
-            Color.LightGray.copy(alpha = 0.5f)
-        )
-    }
+fun CardPaymentCardFrameLoading() {
+    val gradientColors = listOf(
+        Color.Gray.copy(alpha = 0.5f),
+        Color.LightGray.copy(alpha = 0.2f),
+        Color.Gray.copy(alpha = 0.5f)
+    )
 
     val transition = rememberInfiniteTransition(label = "")
     val translateAnim = transition.animateFloat(
         initialValue = 0f,
         targetValue = 1000f,
         animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = 1000,
-                easing = FastOutSlowInEasing
-            ),
+            animation = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ), label = ""
     )
@@ -80,28 +69,30 @@ fun CardPaymentCardFrameReading() {
     )
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(230.dp)
-            .background(brush = brush),
         colors = CardColors(
             containerColor = Color.Transparent,
             contentColor = Color.Transparent,
             disabledContainerColor = Color.Transparent,
             disabledContentColor = Color.Transparent
         ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(spacing32))
+            .background(brush = brush)
+            .height(230.dp),
         elevation = CardDefaults.cardElevation()
     ) {
         Column(
             verticalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.padding(spacing12)
         ) {
+            // Card Type ----- Card Type Symbol
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = spacing16, end = spacing16, top = spacing32)
+                    .padding(horizontal = spacing16)
             ) {
                 Spacer(
                     modifier = Modifier
@@ -111,11 +102,13 @@ fun CardPaymentCardFrameReading() {
                         .background(brush)
                 )
             }
+
+            // Card Number
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = spacing32)
+                    .padding(vertical = spacing8)
             ) {
                 Surface(
                     modifier = Modifier
@@ -145,14 +138,22 @@ fun CardPaymentCardFrameReading() {
                 )
             }
 
+            // Card Holder Name & Exp date
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = spacing16, horizontal = spacing24)
+                    .padding(vertical = spacing12, horizontal = spacing24)
             ) {
+                // Card Holder name
                 Column {
+                    Text(
+                        text = "CARD HOLDER",
+                        fontSize = fontSize12,
+                        fontFamily = FontFamily.SansSerif
+                    )
+
                     Spacer(
                         modifier = Modifier
                             .width(100.dp)
@@ -160,11 +161,19 @@ fun CardPaymentCardFrameReading() {
                             .clip(RoundedCornerShape(spacing32))
                             .background(brush)
                     )
+
                 }
 
                 Spacer(modifier = Modifier.weight(full))
 
+                // Expiry Date
                 Column {
+                    Text(
+                        text = "EXPIRY DATE",
+                        fontSize = fontSize12,
+                        fontFamily = FontFamily.SansSerif
+                    )
+
                     Spacer(
                         modifier = Modifier
                             .width(100.dp)
@@ -180,6 +189,8 @@ fun CardPaymentCardFrameReading() {
 
 @ThemePreview
 @Composable
-fun CardPaymentCardFrameReadingPreview() {
-    AppTheme { CardPaymentCardFrameReading() }
+fun CardPaymentCardFrameLoadingPreview() {
+    SalesTestAppTheme {
+        CardPaymentCardFrameLoading()
+    }
 }

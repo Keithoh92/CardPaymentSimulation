@@ -4,11 +4,11 @@ import com.example.salestestapp.ui.salescontrol.enums.SalesSortFilter
 
 data class SalesFilteringBottomSheetUIState(
     val sortingSalesBy: SalesSortFilter = SalesSortFilter.TIME,
-    val isVoidChecked: Boolean = true,
-    val isValidChecked: Boolean = true,
-    val isMissedChecked: Boolean = true,
-    val isCompChecked: Boolean = true,
-    val seatNumberSelected: String = "All"
+    val isVoidChecked: Boolean,
+    val isValidChecked: Boolean,
+    val isMissedChecked: Boolean,
+    val isCompChecked: Boolean,
+    val seatNumberSelected: String
 ) {
 
     fun enableAllSalesTypeFilters(): SalesFilteringBottomSheetUIState {
@@ -17,6 +17,17 @@ data class SalesFilteringBottomSheetUIState(
             isCompChecked = true,
             isMissedChecked = true,
             isVoidChecked = true
+        )
+    }
+
+    companion object {
+        fun initial() = SalesFilteringBottomSheetUIState(
+            sortingSalesBy = SalesSortFilter.TIME,
+            isVoidChecked = true,
+            isValidChecked = true,
+            isMissedChecked = true,
+            isCompChecked = true,
+            seatNumberSelected = "All"
         )
     }
 }

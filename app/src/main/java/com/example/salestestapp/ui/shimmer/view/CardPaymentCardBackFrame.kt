@@ -1,4 +1,4 @@
-package com.example.salestestapp.ui.shimmer
+package com.example.salestestapp.ui.shimmer.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -24,16 +24,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.compose.AppTheme
 import com.example.salestestapp.common.ThemePreview
+import com.example.salestestapp.ui.shimmer.PaintBody
 import com.example.salestestapp.ui.shimmer.event.CardPaymentScreenEvent
 import com.example.salestestapp.ui.shimmer.model.CardSignatruePathState
 import com.example.salestestapp.ui.theme.fontSize16
 import com.example.salestestapp.ui.theme.spacing12
-import com.example.testui.common.BaseComposeEvent
 
 @Composable
 fun CardPaymentCardBackFrame(
     path: MutableList<CardSignatruePathState>,
-    event: (BaseComposeEvent) -> Unit
+    event: (CardPaymentScreenEvent) -> Unit
 ) {
     val boxSize = with(LocalDensity.current) { 230.dp.toPx() }
 

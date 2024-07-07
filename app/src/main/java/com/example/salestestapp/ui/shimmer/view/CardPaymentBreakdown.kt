@@ -1,4 +1,4 @@
-package com.example.salestestapp.ui.shimmer
+package com.example.salestestapp.ui.shimmer.view
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
